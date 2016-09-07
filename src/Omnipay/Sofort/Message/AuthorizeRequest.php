@@ -23,10 +23,10 @@ class AuthorizeRequest extends AbstractRequest
         $reasons = $data->addChild('reasons');
 
         if (is_string($this->getDescription())) {
-            $reasons->addChild('reason', $this->getDescription());
+            $reasons->addChild('reason', $this->translit($this->getDescription()));
         } elseif (is_array($this->getDescription())) {
             foreach ($this->getDescription() as $reason) {
-                $reasons->addChild('reason', $reason);
+                $reasons->addChild('reason', $this->translit($reason));
             }
         }
 
@@ -42,5 +42,10 @@ class AuthorizeRequest extends AbstractRequest
     protected function createResponse($response)
     {
         return $this->response = new AuthorizeResponse($this, $response);
+    }
+
+    protected function translit($content)
+    {
+        return extension_loaded('intl') ? transliterator_transliterate('Any-Latin; Latin-ASCII', $content) : $content;
     }
 }
