@@ -10,7 +10,7 @@ class Response extends AbstractResponse
     public function __construct(RequestInterface $request, $response)
     {
         $this->request = $request;
-        $this->data = $response->xml();
+        $this->data = simplexml_load_string((string) $response->getBody());
     }
 
     public function isSuccessful()
